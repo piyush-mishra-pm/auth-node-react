@@ -1,6 +1,9 @@
 import express, {Request, Response} from 'express';
-import { configureRouter } from './src/api/v1/routes';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
+import { configureRouter } from './src/api/v1/routes';
 
 mongoose
     .connect('mongodb://localhost:27017/auth_node_react')
@@ -11,6 +14,8 @@ mongoose
 const app =express();
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({origin:'https://localhost:3000',credentials:true}));
 
 configureRouter(app);
 
