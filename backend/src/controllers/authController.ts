@@ -1,6 +1,6 @@
-import { NextFunction, Request,Response } from "express";
-import { Joi } from "express-validation";
-import bcryptjs from "bcryptjs";
+import {Request, Response} from 'express';
+import {Joi} from 'express-validation';
+import bcryptjs from 'bcryptjs';
 import {sign, verify} from 'jsonwebtoken';
 
 import {UserModel} from '../models/UserModel';
@@ -34,8 +34,7 @@ export async function register(req: Request, res: Response) {
     if (existingUser) {
       return res.status(400).send('Email already exists. Could not Signup the user!');
     }
-
-    const salt = await bcryptjs.genSalt(10);
+    const salt = await bcryptjs.genSalt(process.env.SALT_ROUNDS ? parseInt(process.env.SALT_ROUNDS) : 10);
     const encryptedPassword = await bcryptjs.hash(req.body.password, salt);
 
     const newUser = new UserModel({
@@ -77,8 +76,8 @@ export async function login(req: Request, res: Response) {
     }
 
     // Create JWT and send Cookies:
-    const token = sign({_id: foundUser._id}, 'secret_key');
-    res.cookie('jwt', token, {httpOnly: true, maxAge: 10 * 1000}); // 1day expiry
+    const token = sign({_id: foundUser._id}, process.env.JWT_SECRET || 'secret_key');
+    res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // 1day expiry
     res.send({message: 'success'});
   } catch (e: any) {
     console.log('Error in Login: ', e);
@@ -91,7 +90,7 @@ export async function user(req: Request, res: Response) {
   let jwtPayload: any;
   try {
     const jwtCookie = req.cookies['jwt'];
-    jwtPayload = verify(jwtCookie, 'secret_key');
+    jwtPayload = verify(jwtCookie, process.env.JWT_SECRET || 'secret_key');
     if (!jwtPayload) {
       return res.status(400).send('unauthenticated');
     }
