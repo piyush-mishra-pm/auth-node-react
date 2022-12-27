@@ -96,7 +96,7 @@ export async function user(req: Request, res: Response) {
     }
   } catch (e) {
     // refresh token or redirect
-    return res.status(400).send('token expired');
+    return res.status(400).send('Token expired. Logged out.');
   }
 
   try {
@@ -109,4 +109,10 @@ export async function user(req: Request, res: Response) {
   } catch (e) {
     return res.status(500).send('Something wrong happened while getting user.');
   }
+}
+
+export async function logout(req: Request, res: Response) {
+  // deleting the JWT cookie.
+  res.cookie('jwt', '', { maxAge: 0 });
+  res.send({ message: 'success' });
 }

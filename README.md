@@ -1,0 +1,9 @@
+- production grade logging.
+- API testing.
+- Accurate HTTP status codes.
+- Stricter TS checks.
+- Extract validation codes in middlewares.
+- Mail and SMS on registered, forgot, reset password!
+- Expire Forgot/Reset password token based on time.
+- Token doesn't need to be unique, but just random.
+- Use Transactions.
