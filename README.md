@@ -7,3 +7,5 @@
 - Expire Forgot/Reset password token based on time.
 - Token doesn't need to be unique, but just random.
 - Use Transactions.
+- Remember Me in Login!
+- Form validation.
