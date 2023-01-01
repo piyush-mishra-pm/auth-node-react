@@ -9,6 +9,10 @@ import Login from './components/Login';
 import HeaderNav from './components/HeaderNav';
 import Logout from './components/Logout';
 
+// Configuring default BaseUrl
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:8000/api/v1';
+
 function App() {
   return (
     <div>
