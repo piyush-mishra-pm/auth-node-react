@@ -1,6 +1,6 @@
-import React, {SyntheticEvent, useEffect, useState} from 'react';
+import React, {SyntheticEvent, useState} from 'react';
 import axios from 'axios';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 
 function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; loggedInUser: any}) {
   const [email, setEmail] = useState('');
@@ -62,6 +62,13 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
             Submit
           </button>
         </form>
+        <Link to="/forgot">
+          <p>Forgot password?</p>
+        </Link>
+        <br />
+        <Link to="/register">
+          <p>Register instead?</p>
+        </Link>
         {responseMessage && (
           <div className="ui warning message">
             <i className="warning icon"></i>

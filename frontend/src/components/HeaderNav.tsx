@@ -1,5 +1,5 @@
-import React, {useState, SyntheticEvent} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import React, {SyntheticEvent} from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 // todo: control 'active' tab, depending upon which screen is current screen.

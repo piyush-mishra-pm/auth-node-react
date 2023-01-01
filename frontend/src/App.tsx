@@ -10,6 +10,7 @@ import HeaderNav from './components/HeaderNav';
 
 // Configuring default BaseUrl
 import axios from 'axios';
+import ForgotPassword from './components/ForgotPassword';
 axios.defaults.baseURL = 'http://localhost:8000/api/v1';
 axios.defaults.withCredentials = true;
 
@@ -33,6 +34,7 @@ function App() {
       <BrowserRouter>
         <HeaderNav loggedInUser={loggedInUser} setLoggedInStatus={() => setLoggedInStatus(false)} />
         <Route path="/register" component={RegisterForm} />
+        <Route path="/forgot" component={ForgotPassword} />
         <Route
           path="/login"
           component={() => <Login loggedInUser={loggedInUser} setLoggedInStatus={() => setLoggedInStatus(true)} />}

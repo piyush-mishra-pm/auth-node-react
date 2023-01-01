@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {SyntheticEvent, useState} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 function RegisterForm() {
   // Creating State objects:
@@ -91,6 +91,7 @@ function RegisterForm() {
             Submit
           </button>
         </form>
+        <Link to="/login">Login instead?</Link>
         {responseMessage && (
           <div className="ui warning message">
             <i className="warning icon"></i>
