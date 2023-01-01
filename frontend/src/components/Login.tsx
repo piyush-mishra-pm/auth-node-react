@@ -40,11 +40,23 @@ function Login() {
         <form className="ui form" onSubmit={onSubmitHandler}>
           <div className="field">
             <label>Email</label>
-            <input type="text" name="email" placeholder="Email ID" onChange={(e) => setEmail(e.target.value)} />
+            <input
+              type="email"
+              required
+              name="email"
+              placeholder="Email ID"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="field">
             <label>Password</label>
-            <input type="text" name="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+            <input
+              type="password"
+              required
+              name="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <button className="ui button" type="submit">
             Submit
