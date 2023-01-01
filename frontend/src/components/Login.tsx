@@ -19,12 +19,10 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
         setResponseMessage(response.data);
       } else setResponseMessage(null);
 
-      console.log(response.data);
       // Redirect, when sussessfully logged in:
       setRedirect(true);
       setLoggedInStatus();
     } catch (e: any) {
-      console.log(e.response.data);
       setResponseMessage(e.response.data);
     }
   }

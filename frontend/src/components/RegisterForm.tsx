@@ -14,7 +14,6 @@ function RegisterForm() {
 
   async function formSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
-    console.log({firstName, lastName, email, password, passwordConfirm});
     try {
       const response = await axios.post('/register', {
         first_name: firstName,
@@ -30,10 +29,7 @@ function RegisterForm() {
 
       // Redirect, when sussessfully logged in:
       setRedirect(true);
-
-      console.log(response.data);
     } catch (e: any) {
-      console.log(e.response.data);
       setResponseMessage(e.response.data);
     }
   }

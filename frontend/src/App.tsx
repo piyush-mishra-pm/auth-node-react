@@ -8,9 +8,11 @@ import Home from './components/Home';
 import Login from './components/Login';
 import HeaderNav from './components/HeaderNav';
 
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+
 // Configuring default BaseUrl
 import axios from 'axios';
-import ForgotPassword from './components/ForgotPassword';
 axios.defaults.baseURL = 'http://localhost:8000/api/v1';
 axios.defaults.withCredentials = true;
 
@@ -35,8 +37,10 @@ function App() {
         <HeaderNav loggedInUser={loggedInUser} setLoggedInStatus={() => setLoggedInStatus(false)} />
         <Route path="/register" component={RegisterForm} />
         <Route path="/forgot" component={ForgotPassword} />
+        <Route path="/reset/:token" component={ResetPassword} />
         <Route
           path="/login"
+          exact
           component={() => <Login loggedInUser={loggedInUser} setLoggedInStatus={() => setLoggedInStatus(true)} />}
         />
         <Route path="/" exact component={() => <Home loggedInUser={loggedInUser} />} />

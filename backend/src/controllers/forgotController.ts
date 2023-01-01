@@ -41,7 +41,7 @@ export async function forgot(req: Request, res: Response) {
         const newReset = new ResetUserModel({ email, token });
 
         await newReset.save()
-        const redirectUrl = `http://localhost:3000/api/v1/reset/${token}`;
+        const redirectUrl = `http://localhost:3000/reset/${token}`;
         await mailTransporter.sendMail({
             from: 'admin@example.com',
             to: email,
