@@ -1,8 +1,8 @@
-import React, {SyntheticEvent, useState} from 'react';
+import React, {SyntheticEvent, useEffect, useState} from 'react';
 import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 
-function Login() {
+function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; loggedInUser: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
@@ -19,17 +19,17 @@ function Login() {
         setResponseMessage(response.data);
       } else setResponseMessage(null);
 
+      console.log(response.data);
       // Redirect, when sussessfully logged in:
       setRedirect(true);
-
-      console.log(response.data);
+      setLoggedInStatus();
     } catch (e: any) {
       console.log(e.response.data);
       setResponseMessage(e.response.data);
     }
   }
 
-  if (redirect) {
+  if (redirect || loggedInUser) {
     return <Redirect to="/" />;
   }
 
