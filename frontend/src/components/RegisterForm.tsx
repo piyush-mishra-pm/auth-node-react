@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React, {SyntheticEvent, useState} from 'react';
+import React, {SyntheticEvent, useRef, useState} from 'react';
 import {Link, Redirect} from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function RegisterForm() {
   // Creating State objects:
@@ -11,16 +12,22 @@ function RegisterForm() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [responseMessage, setResponseMessage] = useState(null);
   const [redirect, setRedirect] = useState(false);
+  const recaptchaRef: any = useRef(null);
 
   async function formSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
+      // Get Captcha and then reset Captcha.
+      const captchaToken = recaptchaRef.current.getValue();
+      recaptchaRef.current.reset();
+
       const response = await axios.post('/register', {
         first_name: firstName,
         last_name: lastName,
         email,
         password,
         password_confirm: passwordConfirm,
+        captcha: captchaToken,
       });
       if (response.status >= 400) {
         setResponseMessage(response.data);
@@ -86,6 +93,7 @@ function RegisterForm() {
           <button className="ui button" type="submit">
             Submit
           </button>
+          <ReCAPTCHA ref={recaptchaRef} sitekey="6LdbU-QjAAAAAAjBAVr0hySl-CSxLyhIfp0evc21" />
         </form>
         <Link to="/login">Login instead?</Link>
         {responseMessage && (

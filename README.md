@@ -9,3 +9,7 @@
 - Use Transactions.
 - Remember Me in Login!
 - Form validation.
+- Reset Password Link expiring in some time.
+- Improve notifications (messages from backend API in Frontend). Standardize backend response schema.
+- Social Authentication.
+- Reset Password Link in HomePage (after Sign-In).
