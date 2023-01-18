@@ -1,9 +1,10 @@
-import {Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {Joi} from 'express-validation';
 import bcryptjs from 'bcryptjs';
 import {sign, verify} from 'jsonwebtoken';
 
 import {UserModel} from '../models/UserModel';
+import ErrorObject from '../utils/ErrorObject';
 
 const registerValidation = Joi.object({
   first_name: Joi.string().required(),
@@ -19,22 +20,27 @@ const loginValidation = Joi.object({
   password: Joi.string().required(),
 });
 
-export async function register(req: Request, res: Response) {
+export async function register(req: Request, res: Response, next: NextFunction) {
   try {
     // Validation errors:
-    const {error} = await registerValidation.validateAsync(req.body);
-    if (error) {
-      return res.status(400).send(`Invalid inputs: ${error.message}`);
-    }
+    await registerValidation.validateAsync(req.body);
+  }
+  catch (e: any) {
+    return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
+  }
+
+  try {
     if (req.body.password !== req.body.password_confirm) {
-      return res.status(400).send(`Invalid inputs: passwords don't match`);
+      return next(new ErrorObject(400, `Invalid inputs: passwords don't match`));
     }
     // Does user Already Exists?
     const existingUser = await UserModel.findOne({email: req.body.email});
 
     if (existingUser) {
-      return res.status(400).send('Email already exists. Could not Signup the user!');
+      return next(new ErrorObject(400, 'Email already exists. Could not Signup the user!'));
     }
+
+    // Salting Password:
     const salt = await bcryptjs.genSalt(process.env.SALT_ROUNDS ? parseInt(process.env.SALT_ROUNDS) : 10);
     const encryptedPassword = await bcryptjs.hash(req.body.password, salt);
 
@@ -48,10 +54,10 @@ export async function register(req: Request, res: Response) {
     const saveDbResult = await newUser.save();
     const {password, ...savedDbResultWithoutPassword} = saveDbResult.toJSON();
 
-    return res.send(savedDbResultWithoutPassword);
+    return res.send({ success: "true", message: "Successfully created new user.", data: savedDbResultWithoutPassword });
   } catch (e) {
     console.log('SignUp failed: ', e);
-    return res.status(500).send(`Something went wrong in signUp!${e}`);
+    next(new ErrorObject(500, `Something went wrong in signUp!${e}`));
   }
 }
 

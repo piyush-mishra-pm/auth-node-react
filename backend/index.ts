@@ -1,11 +1,12 @@
 require('dotenv').config();
 
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import {configureRouter} from './src/api/v1/routes';
+import ErrorObject from './src/utils/ErrorObject';
 
 mongoose
   .connect(process.env.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
@@ -20,6 +21,21 @@ app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 configureRouter(app);
+
+// Default Error Handler:
+app.use((error: ErrorObject, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(error);
+  }
+  res.status(error.statusCode || 500);
+  res.send({ success: 'false', message: error.message || 'An unknown error occurred!' });
+});
+
+// Path Not found:
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404)
+  res.send('invalid path')
+});
 
 app.listen(process.env.PORT || 8000, () => {
   console.log('listeing on port 8000');
