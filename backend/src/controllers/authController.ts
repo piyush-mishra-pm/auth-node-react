@@ -54,72 +54,74 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const saveDbResult = await newUser.save();
     const {password, ...savedDbResultWithoutPassword} = saveDbResult.toJSON();
 
-    return res.send({ success: "true", message: "Successfully created new user.", data: savedDbResultWithoutPassword });
+    return res.status(200).send({ success: "true", message: "Successfully created new user.", data: savedDbResultWithoutPassword });
   } catch (e) {
     console.log('SignUp failed: ', e);
     next(new ErrorObject(500, `Something went wrong in signUp!${e}`));
   }
 }
 
-export async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response, next: NextFunction) {
   // Validation
   try {
     await loginValidation.validateAsync(req.body);
   } catch (e: any) {
-    return res.status(400).send(`Invalid inputs: ${e.message}`);
+    return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
   }
 
   try {
     // Whether User Found:
     const foundUser = await UserModel.findOne({email: req.body.email});
     if (!foundUser) {
-      return res.status(400).send('Invalid Credentials!');
+      return next(new ErrorObject(400, 'Invalid Credentials!'));
     }
 
     // Whether Password matched:
     const isPasswordMatching = await bcryptjs.compare(req.body.password, foundUser.password);
     if (!isPasswordMatching) {
-      return res.status(400).send('Invalid Credentials!');
+      return next(new ErrorObject(400, 'Invalid Credentials!'));
     }
 
-    // Create JWT and send Cookies:
+    // Create JWT:
     const token = sign({_id: foundUser._id}, process.env.JWT_SECRET || 'secret_key');
+
+    // Send JWT in Cookies and body:
     res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // 1day expiry
-    res.send({message: 'success'});
+    res.status(200).send({ success: 'true', message: 'Successfully logged in!', data: token });
   } catch (e: any) {
     console.log('Error in Login: ', e);
-    return res.status(500).send(`Something went wrong during Login! ${e}`);
+    return next(new ErrorObject(500, `Something went wrong during Login! ${e}`));
   }
 }
 
 // todo: token refresh when expired: Redirect to login or refresh token?
-export async function user(req: Request, res: Response) {
+export async function user(req: Request, res: Response, next: NextFunction) {
   let jwtPayload: any;
   try {
     const jwtCookie = req.cookies['jwt'];
     jwtPayload = verify(jwtCookie, process.env.JWT_SECRET || 'secret_key');
     if (!jwtPayload) {
-      return res.status(400).send('unauthenticated');
+      return next(new ErrorObject(400, 'Unauthenticated user.'));
     }
-  } catch (e) {
+  } catch (e: any) {
     // refresh token or redirect
-    return res.status(400).send('Token expired. Logged out.');
+    return next(new ErrorObject(400, 'Either token expired, or Logged out. Try logging in!'));
   }
 
   try {
     const userFound = await UserModel.findOne({_id: jwtPayload._id});
     if (!userFound) {
-      return res.status(400).send('unauthenticated');
+      return next(new ErrorObject(400, 'Unauthenticated! Please register!'));
     }
-    const {password, ...restUserDataWithoutPassword} = await userFound.toJSON();
-    res.send(restUserDataWithoutPassword);
+    const { password, ...restUserDataWithoutPassword } = userFound.toJSON();
+    return res.status(200).send({ success: 'true', message: 'Successfully opened user!', data: restUserDataWithoutPassword });
   } catch (e) {
-    return res.status(500).send('Something wrong happened while getting user.');
+    next(new ErrorObject(500, 'Something wrong happened while getting user.'));
   }
 }
 
 export async function logout(req: Request, res: Response) {
   // deleting the JWT cookie.
   res.cookie('jwt', '', { maxAge: 0 });
-  res.send({ message: 'success' });
+  res.status(200).send({ success: 'true', message: 'Logged out successfully!' });
 }

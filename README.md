@@ -11,3 +11,13 @@
 - Reset Password Link expiring in some time.
 - Social Authentication.
 - Reset Password Link in HomePage (after Sign-In).
+- Sending JWT in response. Validity of JWT in Login.
+- DB serialisation without pwd.
+- Refactor Mailer Service code into a separate file.
+
+
+To run Mailhog using below command:
+```
+mailhog
+// then visit 0.0.0.0:8025 in browser.
+```
