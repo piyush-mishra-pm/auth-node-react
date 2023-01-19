@@ -1,5 +1,5 @@
 import React, {SyntheticEvent, useState} from 'react';
-import axios from 'axios';
+import apiWrapper from '../apis/apiWrapper';
 import {Redirect, Link} from 'react-router-dom';
 
 function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; loggedInUser: any}) {
@@ -11,7 +11,7 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      const response = await axios.post('/login', {
+      const response = await apiWrapper.post('/login', {
         email,
         password,
       });

@@ -1,20 +1,15 @@
 import React, {useState, useEffect} from 'react';
+import {BrowserRouter, Route} from 'react-router-dom';
+import apiWrapper from './apis/apiWrapper';
 
-import RegisterForm from './components/RegisterForm';
+import RegisterForm from './pages/RegisterForm';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import HeaderNav from './pages/HeaderNav';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 import './App.css';
-import {BrowserRouter, Route} from 'react-router-dom';
-import Home from './components/Home';
-import Login from './components/Login';
-import HeaderNav from './components/HeaderNav';
-
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
-
-// Configuring default BaseUrl
-import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:8000/api/v1';
-axios.defaults.withCredentials = true;
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -23,7 +18,7 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get('/user');
+        const response = await apiWrapper.get('/user');
         setLoggedInUser(response.data);
       } catch (e) {
         setLoggedInUser(null);

@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, {SyntheticEvent, useRef, useState} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import apiWrapper from '../apis/apiWrapper';
 
 function RegisterForm() {
   // Creating State objects:
@@ -21,7 +21,7 @@ function RegisterForm() {
       const captchaToken = recaptchaRef.current.getValue();
       recaptchaRef.current.reset();
 
-      const response = await axios.post('/register', {
+      const response = await apiWrapper.post('/register', {
         first_name: firstName,
         last_name: lastName,
         email,

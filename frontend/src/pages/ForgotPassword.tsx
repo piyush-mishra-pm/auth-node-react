@@ -1,6 +1,6 @@
 import React, {SyntheticEvent, useState} from 'react';
 import {Link} from 'react-router-dom';
-import axios from 'axios';
+import apiWrapper from '../apis/apiWrapper';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -9,7 +9,7 @@ function ForgotPassword() {
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      const response = await axios.post('/forgot', {email});
+      await apiWrapper.post('/forgot', {email});
       setNotification({show: true, error: false, message: `Please Check the Email: ${email}`});
       setEmail('');
     } catch (e) {

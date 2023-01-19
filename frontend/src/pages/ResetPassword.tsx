@@ -1,6 +1,6 @@
 import React, {useState, SyntheticEvent} from 'react';
 import {Link, Redirect} from 'react-router-dom';
-import axios from 'axios';
+import apiWrapper from '../apis/apiWrapper';
 
 function ResetPassword({match}: {match: any}) {
   const [password, setPassword] = useState('');
@@ -12,7 +12,7 @@ function ResetPassword({match}: {match: any}) {
     e.preventDefault();
     try {
       const token = match.params.token;
-      await axios.post('/reset', {password, token, password_confirm: passwordConfirm});
+      await apiWrapper.post('/reset', {password, token, password_confirm: passwordConfirm});
       setNotification({show: true, error: false, message: `Password successfully reset. Try Logging in!`});
       setRedirect(true);
     } catch (e) {

@@ -1,13 +1,13 @@
 import React, {SyntheticEvent} from 'react';
 import {Link} from 'react-router-dom';
-import axios from 'axios';
+import apiWrapper from '../apis/apiWrapper';
 
 // todo: control 'active' tab, depending upon which screen is current screen.
 function HeaderNav({loggedInUser, setLoggedInStatus}: {loggedInUser: any; setLoggedInStatus: Function}) {
   async function onLogoutClickHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      await axios.post('/logout', {});
+      await apiWrapper.post('/logout', {});
       setLoggedInStatus();
     } catch (err) {
       console.error('Error while logging out:', err);
