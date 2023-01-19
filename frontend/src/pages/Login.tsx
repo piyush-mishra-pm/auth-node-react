@@ -16,14 +16,14 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
         password,
       });
       if (response.status >= 400) {
-        setResponseMessage(response.data);
+        setResponseMessage(response.data.message);
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
       setRedirect(true);
       setLoggedInStatus();
     } catch (e: any) {
-      setResponseMessage(e.response.data);
+      setResponseMessage(e.response.data.message);
     }
   }
 

@@ -30,14 +30,14 @@ function RegisterForm() {
         captcha: captchaToken,
       });
       if (response.status >= 400) {
-        setResponseMessage(response.data);
-        throw Error(response.data);
+        setResponseMessage(response.data.message);
+        throw Error(response.data.message);
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
       setRedirect(true);
     } catch (e: any) {
-      setResponseMessage(e.response.data);
+      setResponseMessage(e.response.data.message);
     }
   }
 
