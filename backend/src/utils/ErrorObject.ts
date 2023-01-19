@@ -2,7 +2,7 @@ export default class ErrorObject extends Error {
     statusCode: number;
     code: number;
 
-    constructor(statusCode: number, message: string) {
+    constructor(statusCode: number, message: string | undefined = undefined) {
         // Add custom "message" for the Error Object:
         super(message);
 

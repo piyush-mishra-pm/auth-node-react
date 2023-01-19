@@ -28,7 +28,7 @@ app.use((error: ErrorObject, req: Request, res: Response, next: NextFunction) =>
     return next(error);
   }
   res.status(error.statusCode || 500);
-  res.send({ success: 'false', message: error.message || 'An unknown error occurred!' });
+  res.send({ success: 'false', message: error.message || 'Something wrong happened!' });
 });
 
 // Path Not found:

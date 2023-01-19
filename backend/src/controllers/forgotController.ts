@@ -41,7 +41,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
         }
     } catch (e) {
         console.log(`Error during finding user by Email in Forgot Password: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 
     // todo: Better tokens with UUID library.
@@ -53,7 +53,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
         await newReset.save()
     } catch (e) {
         console.log(`Error during forgot password: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 
     // Try sending the Forgot password mail containing token:
@@ -68,7 +68,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
         return res.status(200).send({ success: 'true', message: `Send token to your registered Email.` });
     } catch (e) {
         console.log(`Error during Forgot password mail generation: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 }
 
@@ -96,7 +96,7 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
         }
     } catch (e) {
         console.log(`Error in finding reset user model while resetting password: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 
     // todo : Expirable token?
@@ -112,7 +112,7 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
             return next(new ErrorObject(400, 'Cannot find any user with such an email id.'));
     } catch (e) {
         console.log(`Error in finding user email while resetting password: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 
     // Creating new password:
@@ -125,7 +125,7 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
         foundUser.save();
     } catch (e) {
         console.log(`Error in saving new password while resetting password: ${e}`);
-        return next(new ErrorObject(500, 'Something wrong happened!'));
+        return next(new ErrorObject(500));
     }
 
     // todo: Delete the token after it was used:
