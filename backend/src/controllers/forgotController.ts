@@ -7,27 +7,9 @@ import { ResetUserModel } from '../models/ResetUserModel';
 import { UserModel } from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 
-
-const forgotValidation = Joi.object({
-    email: Joi.string().email().required(),
-});
-
-const resetValidation = Joi.object({
-    token: Joi.string().required(),
-    password: Joi.string().required(),
-    password_confirm: Joi.string().required()
-});
-
 const mailTransporter = createTransport({ host: '0.0.0.0', port: 1025 });
 
 export async function forgot(req: Request, res: Response, next: NextFunction) {
-    // Validation:
-    try {
-        await forgotValidation.validateAsync(req.body);
-    } catch (e: any) {
-        return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
-    }
-
     let email;
     try {
         email = req.body.email;
@@ -73,13 +55,6 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function reset(req: Request, res: Response, next: NextFunction) {
-    // Validation:
-    try {
-        await resetValidation.validateAsync(req.body);
-    } catch (e: any) {
-        return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
-    }
-
     // Passwords don't match?
     if (req.body.password !== req.body.password_confirm)
         return next(new ErrorObject(400, `Invalid inputs. Passwords and Confirm-Password fields don't match.`));

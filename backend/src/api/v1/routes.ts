@@ -4,16 +4,16 @@ import { forgot, reset } from '../../controllers/forgotController';
 import checkRecaptcha from '../../middlewares/checkRecaptcha';
 import { validationFactory } from "../../middlewares/validateInputs";
 
-import { registerValidation } from "../../models/validationModels";
+import { registerValidation, loginValidation, forgotValidation, resetValidation } from "../../models/validationModels";
 
 export function configureRouter(router: Router) {
     router.get('/api/v1/register', (req: Request,res:Response)=>res.send('soon you can register.'));
     router.get('/',(req:Request,res:Response)=> res.send('Welcome'));
     router.post('/api/v1/register', validationFactory(registerValidation), checkRecaptcha, register);
-    router.post('/api/v1/login', login);
+    router.post('/api/v1/login', validationFactory(loginValidation), login);
     router.get('/api/v1/user',user);
     router.post('/api/v1/logout', logout);
 
-    router.post('/api/v1/forgot', forgot);
-    router.post('/api/v1/reset', reset);
+    router.post('/api/v1/forgot', validationFactory(forgotValidation), forgot);
+    router.post('/api/v1/reset', validationFactory(resetValidation), reset);
 }

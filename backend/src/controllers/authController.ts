@@ -6,11 +6,6 @@ import {sign, verify} from 'jsonwebtoken';
 import {UserModel} from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 
-const loginValidation = Joi.object({
-  email: Joi.string().required(),
-  password: Joi.string().required(),
-});
-
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
     if (req.body.password !== req.body.password_confirm) {
@@ -45,12 +40,6 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 }
 
 export async function login(req: Request, res: Response, next: NextFunction) {
-  // Validation
-  try {
-    await loginValidation.validateAsync(req.body);
-  } catch (e: any) {
-    return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
-  }
 
   try {
     // Whether User Found:
