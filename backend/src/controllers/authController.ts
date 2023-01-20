@@ -6,29 +6,12 @@ import {sign, verify} from 'jsonwebtoken';
 import {UserModel} from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 
-const registerValidation = Joi.object({
-  first_name: Joi.string().required(),
-  last_name: Joi.string(),
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
-  password_confirm: Joi.string().required(),
-  captcha: Joi.string().optional
-});
-
 const loginValidation = Joi.object({
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
 
 export async function register(req: Request, res: Response, next: NextFunction) {
-  try {
-    // Validation errors:
-    await registerValidation.validateAsync(req.body);
-  }
-  catch (e: any) {
-    return next(new ErrorObject(400, `Invalid inputs: ${e.message}`));
-  }
-
   try {
     if (req.body.password !== req.body.password_confirm) {
       return next(new ErrorObject(400, `Invalid inputs: passwords don't match`));
