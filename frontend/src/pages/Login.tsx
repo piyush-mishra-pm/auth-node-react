@@ -1,10 +1,11 @@
 import React, {SyntheticEvent, useState, useCallback} from 'react';
-import apiWrapper from '../apis/apiWrapper';
 import {Redirect, Link} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {useSelector, useDispatch} from 'react-redux';
+
+import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {AUTH_PAYLOAD} from '../store/PAYLOAD_DEFINITIONS';
+import {AUTH_PAYLOAD, USER_PAYLOAD} from '../store/PAYLOAD_DEFINITIONS';
 import {AUTH_STATE, STATE} from '../store/STATE_DEFINITIONS';
 
 function Login() {
@@ -14,8 +15,12 @@ function Login() {
   const [responseMessage, setResponseMessage] = useState(null);
   const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
   const dispatch = useDispatch();
-  const loginDispatcher = useCallback(
+  const authDispatcher = useCallback(
     (type: string, payload: AUTH_PAYLOAD | undefined) => dispatch({type, payload}),
+    [dispatch]
+  );
+  const userDispatcher = useCallback(
+    (type: string, payload: USER_PAYLOAD | undefined) => dispatch({type, payload}),
     [dispatch]
   );
 
@@ -27,16 +32,23 @@ function Login() {
         password,
       });
       if (response.status >= 400) {
-        loginDispatcher(ACTION_TYPES.SIGN_OUT, undefined);
+        authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
+        userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
         setResponseMessage(response.data.message);
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
       setRedirect(true);
-      loginDispatcher(ACTION_TYPES.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
+      authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
+      userDispatcher(ACTION_TYPES.USER.FILL_PII, {
+        first_name: response.data.data.first_name,
+        last_name: response.data.data.last_name,
+        email: response.data.data.email,
+      });
     } catch (e: any) {
-      loginDispatcher(ACTION_TYPES.SIGN_OUT, undefined);
+      authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
       setResponseMessage(e.response.data.message);
+      userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     }
   }
 

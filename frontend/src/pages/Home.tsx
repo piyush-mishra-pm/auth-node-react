@@ -1,10 +1,14 @@
 import React from 'react';
+import {useSelector} from 'react-redux';
+
+import {AUTH_STATE, STATE, USER_STATE} from '../store/STATE_DEFINITIONS';
 
 function Home() {
-  // todo: add user details (removed from earlier)
-  const loggedInUser = {first_name: 'Dummy', last_name: 'User'};
-  const loggedInStatusMessage = loggedInUser
-    ? `Hi, ${loggedInUser.first_name} ${loggedInUser.last_name}`
+  const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
+  const userState: USER_STATE = useSelector((state: STATE) => state.user);
+
+  const loggedInStatusMessage = authState.isSignedIn
+    ? `Hi, ${userState.first_name} ${userState.last_name}`
     : 'Unauthenticated user! Not logged in yet!';
 
   return (
