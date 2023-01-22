@@ -1,13 +1,23 @@
-import React, {SyntheticEvent, useState} from 'react';
+import React, {SyntheticEvent, useState, useCallback} from 'react';
 import apiWrapper from '../apis/apiWrapper';
 import {Redirect, Link} from 'react-router-dom';
 import {toast} from 'react-toastify';
+import {useSelector, useDispatch} from 'react-redux';
+import ACTION_TYPES from '../store/actions/ACTION_TYPES';
+import {AUTH_PAYLOAD} from '../store/PAYLOAD_DEFINITIONS';
+import {AUTH_STATE, STATE} from '../store/STATE_DEFINITIONS';
 
-function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; loggedInUser: any}) {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
+  const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
+  const dispatch = useDispatch();
+  const loginDispatcher = useCallback(
+    (type: string, payload: AUTH_PAYLOAD | undefined) => dispatch({type, payload}),
+    [dispatch]
+  );
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -17,18 +27,20 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
         password,
       });
       if (response.status >= 400) {
+        loginDispatcher(ACTION_TYPES.SIGN_OUT, undefined);
         setResponseMessage(response.data.message);
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
       setRedirect(true);
-      setLoggedInStatus();
+      loginDispatcher(ACTION_TYPES.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
     } catch (e: any) {
+      loginDispatcher(ACTION_TYPES.SIGN_OUT, undefined);
       setResponseMessage(e.response.data.message);
     }
   }
 
-  if (redirect || loggedInUser) {
+  if (redirect || authState.isSignedIn) {
     return <Redirect to="/" />;
   }
 
@@ -78,12 +90,12 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
     );
   }
 
-    if (responseMessage) {
-      toast(responseMessage, {
-        type: 'error',
-        toastId: 'Login-Toast',
-      });
-    }
+  if (responseMessage) {
+    toast(responseMessage, {
+      type: 'error',
+      toastId: 'Login-Toast',
+    });
+  }
 
   return renderForm();
 }

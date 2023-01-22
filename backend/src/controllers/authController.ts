@@ -59,7 +59,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
     // Send JWT in Cookies and body:
     res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // 1day expiry
-    res.status(200).send({ success: 'true', message: 'Successfully logged in!', data: token });
+    res.status(200).send({ success: 'true', message: 'Successfully logged in!', data: { jwt: token, userId: foundUser._id } });
   } catch (e: any) {
     console.log('Error in Login: ', e);
     return next(new ErrorObject(500, `Something went wrong during Login! ${e}`));
