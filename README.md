@@ -21,3 +21,5 @@ To run Mailhog using below command:
 mailhog
 // then visit 0.0.0.0:8025 in browser.
 ```
+
+Switch from JS to TS in ReduxStore part folder.
