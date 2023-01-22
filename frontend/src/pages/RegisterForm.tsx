@@ -1,6 +1,8 @@
 import React, {SyntheticEvent, useRef, useState} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import {toast} from 'react-toastify';
+
 import apiWrapper from '../apis/apiWrapper';
 
 function RegisterForm() {
@@ -104,6 +106,13 @@ function RegisterForm() {
         )}
       </div>
     );
+  }
+
+  if (responseMessage) {
+    toast(responseMessage, {
+      type: 'error',
+      toastId: 'Login-Toast',
+    });
   }
 
   if (redirect) {

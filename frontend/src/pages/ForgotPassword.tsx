@@ -1,5 +1,6 @@
 import React, {SyntheticEvent, useState} from 'react';
 import {Link} from 'react-router-dom';
+import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
 
 function ForgotPassword() {
@@ -55,6 +56,11 @@ function ForgotPassword() {
       </div>
     );
   }
+
+  if (notification.show) {
+    toast(notification.message, {type: notification.error ? 'error' : 'success', toastId: 'ForgotPassword'});
+  }
+
   return renderForm();
 }
 

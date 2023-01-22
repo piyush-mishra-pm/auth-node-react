@@ -1,5 +1,6 @@
 import React, {useState, SyntheticEvent} from 'react';
 import {Link, Redirect} from 'react-router-dom';
+import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
 
 function ResetPassword({match}: {match: any}) {
@@ -68,6 +69,13 @@ function ResetPassword({match}: {match: any}) {
         </div>
       </div>
     );
+  }
+
+  if (notification.message) {
+    toast(notification.message, {
+      type: notification.error ? 'error' : 'success',
+      toastId: 'Reset-Password',
+    });
   }
 
   if (redirect) {

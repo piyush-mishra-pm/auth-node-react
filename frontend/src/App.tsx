@@ -10,6 +10,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
 import './App.css';
+import ToastContainerWrapper from './components/ToastContainerWrapper';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -39,6 +40,7 @@ function App() {
           component={() => <Login loggedInUser={loggedInUser} setLoggedInStatus={() => setLoggedInStatus(true)} />}
         />
         <Route path="/" exact component={() => <Home loggedInUser={loggedInUser} />} />
+        <ToastContainerWrapper />
       </BrowserRouter>
     </div>
   );

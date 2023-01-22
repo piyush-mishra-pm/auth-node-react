@@ -1,6 +1,7 @@
 import React, {SyntheticEvent, useState} from 'react';
 import apiWrapper from '../apis/apiWrapper';
 import {Redirect, Link} from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; loggedInUser: any}) {
   const [email, setEmail] = useState('');
@@ -76,6 +77,14 @@ function Login({setLoggedInStatus, loggedInUser}: {setLoggedInStatus: Function; 
       </div>
     );
   }
+
+    if (responseMessage) {
+      toast(responseMessage, {
+        type: 'error',
+        toastId: 'Login-Toast',
+      });
+    }
+
   return renderForm();
 }
 
