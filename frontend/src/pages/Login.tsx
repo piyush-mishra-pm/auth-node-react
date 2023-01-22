@@ -1,12 +1,12 @@
-import React, {SyntheticEvent, useState, useCallback} from 'react';
+import React, {SyntheticEvent, useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {AUTH_PAYLOAD, USER_PAYLOAD} from '../store/PAYLOAD_DEFINITIONS';
 import {AUTH_STATE, STATE} from '../store/STATE_DEFINITIONS';
+import {useUserDispatcher, useAuthDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -14,15 +14,9 @@ function Login() {
   const [redirect, setRedirect] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
   const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
-  const dispatch = useDispatch();
-  const authDispatcher = useCallback(
-    (type: string, payload: AUTH_PAYLOAD | undefined) => dispatch({type, payload}),
-    [dispatch]
-  );
-  const userDispatcher = useCallback(
-    (type: string, payload: USER_PAYLOAD | undefined) => dispatch({type, payload}),
-    [dispatch]
-  );
+
+  const userDispatcher = useUserDispatcher();
+  const authDispatcher = useAuthDispatcher();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
