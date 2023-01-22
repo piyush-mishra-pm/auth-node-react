@@ -10,7 +10,7 @@ export const registerValidation = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     password_confirm: Joi.string().required(),
-    captcha: Joi.string().optional
+    captcha: Joi.string().required()
 });
 
 export const forgotValidation = Joi.object({

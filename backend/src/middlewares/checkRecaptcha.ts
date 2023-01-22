@@ -1,4 +1,4 @@
-
+import _ from 'lodash'
 import axios from "axios";
 import { NextFunction, Request, Response } from "express";
 
@@ -13,7 +13,6 @@ export default async function checkRecaptcha(req: Request, res: Response, next: 
         if (!verificationReponse.data.success) {
             return res.status(400).send('Error during Captcha.');
         }
-        req.body.captcha = undefined;
         return next();
     } catch (err) {
         return res.status(500).send('Error during Captcha.');
