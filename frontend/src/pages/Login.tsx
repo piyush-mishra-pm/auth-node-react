@@ -4,7 +4,7 @@ import {toast} from 'react-toastify';
 
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {useUserDispatcher, useAuthDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
+import {useUserDispatcher, useAuthDispatcher, useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,12 +13,14 @@ function Login() {
 
   const userDispatcher = useUserDispatcher();
   const authDispatcher = useAuthDispatcher();
+  const uiDispatcher = useUiDispatcher();
 
   const history = useHistory();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
+      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
       const response = await apiWrapper.post('/login', {
         email,
         password,
@@ -29,19 +31,20 @@ function Login() {
         setResponseMessage(response.data.message);
       } else setResponseMessage(null);
 
-      // Redirect, when sussessfully logged in:
-      history.push('/');
       authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
       userDispatcher(ACTION_TYPES.USER.FILL_PII, {
         first_name: response.data.data.first_name,
         last_name: response.data.data.last_name,
         email: response.data.data.email,
       });
+      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
+      history.push('/');
     } catch (e: any) {
       authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
       setResponseMessage(e.response.data.message);
       userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     }
+    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
   }
 
   function renderForm() {

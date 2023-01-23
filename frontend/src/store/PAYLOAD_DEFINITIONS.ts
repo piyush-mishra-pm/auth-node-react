@@ -8,3 +8,7 @@ export interface USER_PAYLOAD {
     last_name: string | null | undefined;
     email: string | null | undefined;
 }
+
+export interface UI_PAYLOAD {
+    isLoading: boolean | null | undefined;
+}

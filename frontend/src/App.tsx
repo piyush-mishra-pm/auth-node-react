@@ -1,5 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 
 import RegisterForm from './pages/RegisterForm';
 import Home from './pages/Home';
@@ -9,13 +10,21 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ToastContainerWrapper from './components/ToastContainerWrapper';
 import NotFound from './pages/NotFound';
+import LoadingSpinner from './components/LoadingSpinner';
+import {UI_PAYLOAD} from './store/PAYLOAD_DEFINITIONS';
+import {STATE} from './store/STATE_DEFINITIONS';
 
 import './App.css';
 
 function App() {
+  const uiState: UI_PAYLOAD = useSelector((state: STATE) => state.ui);
   return (
     <div>
       <BrowserRouter>
+        {
+          /* Show Loading Spinner if state says so. */
+          uiState && uiState.isLoading && <LoadingSpinner />
+        }
         <HeaderNav />
         <Switch>
           <Route path="/register" exact component={RegisterForm} />
