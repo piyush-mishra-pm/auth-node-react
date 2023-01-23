@@ -10,6 +10,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ToastContainerWrapper from './components/ToastContainerWrapper';
 import NotFound from './pages/NotFound';
+import ResetPasswordMailSent from './pages/ResetPasswordMailSent';
 import LoadingSpinner from './components/LoadingSpinner';
 import {UI_PAYLOAD} from './store/PAYLOAD_DEFINITIONS';
 import {STATE} from './store/STATE_DEFINITIONS';
@@ -21,15 +22,16 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-        {
-          /* Show Loading Spinner if state says so. */
-          uiState && uiState.isLoading && <LoadingSpinner />
-        }
         <HeaderNav />
         <Switch>
+          {
+            /* Show Loading Spinner if state says so. */
+            uiState && uiState.isLoading && <LoadingSpinner />
+          }
           <Route path="/register" exact component={RegisterForm} />
           <Route path="/forgot" exact component={ForgotPassword} />
           <Route path="/reset/:token" exact component={ResetPassword} />
+          <Route path="/reset_mail_sent" exact component={ResetPasswordMailSent} />
           <Route path="/login" exact component={Login} />
           <Route path="/" exact component={Home} />
           <Route path="*" component={NotFound} />

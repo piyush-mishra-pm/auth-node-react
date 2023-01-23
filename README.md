@@ -26,3 +26,4 @@ Switch from JS to TS in ReduxStore part folder.
 - notification from redux.
 - authenticated routes on frontend.
 - Loading spinner on Buttons sending HTTPRequests (and disable them from sending multiple events, until previous one resolves).
+  - Loading Spinner (should disable when route changed)

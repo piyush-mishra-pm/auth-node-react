@@ -11,4 +11,5 @@ export interface USER_PAYLOAD {
 
 export interface UI_PAYLOAD {
     isLoading: boolean | null | undefined;
+    resetPasswordMailSent?: boolean;
 }
