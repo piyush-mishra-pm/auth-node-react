@@ -5,8 +5,10 @@ import bcryptjs from 'bcryptjs';
 import { ResetUserModel } from '../models/ResetUserModel';
 import { UserModel } from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
-
+import { TOKEN_VAILIDITY_DURATION_IN_MINUTES } from '../models/ResetUserModel';
 const mailTransporter = createTransport({ host: '0.0.0.0', port: 1025 });
+
+
 
 export async function forgot(req: Request, res: Response, next: NextFunction) {
     let email;
@@ -28,9 +30,12 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
     // todo: Better tokens with UUID library.
     const token = Math.random().toString(20).substring(2, 12);
 
+    // in millisecs:
+    const tokenValidityLimitEpoch = new Date().valueOf() + TOKEN_VAILIDITY_DURATION_IN_MINUTES * 60 * 1000;
+
     // Try saving the reset user model in DB:
     try {
-        const newReset = new ResetUserModel({ email, token });
+        const newReset = new ResetUserModel({ email, token, validity: tokenValidityLimitEpoch });
         await newReset.save()
     } catch (e) {
         console.log(`Error during forgot password: ${e}`);
@@ -46,7 +51,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
             subject: 'Reset your Password',
             html: `Click <a href="${redirectUrl}">here</a> to reset Password`
         });
-        return res.status(200).send({ success: 'true', message: `Send token to your registered Email.` });
+        return res.status(200).send({ success: 'true', message: `Send token to your registered Email. Will expire in ${TOKEN_VAILIDITY_DURATION_IN_MINUTES} minutes.`, data: { validity: tokenValidityLimitEpoch } });
     } catch (e) {
         console.log(`Error during Forgot password mail generation: ${e}`);
         return next(new ErrorObject(500));
@@ -65,15 +70,17 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
             return next(new ErrorObject(400, `Token missing in request body. Please use forgot password link sent in mail.`));
         }
         foundResetData = await ResetUserModel.findOne({ token: req.body.token });
+        // Reset token has TTL of certain duration, and then its deleted from DB automatically.
+        // So, if token not found, then:
+        //  - Either token expired and got automatically deleted from DB.
+        //  - Or Invalid, and never existed in DB.
         if (!foundResetData) {
-            return next(new ErrorObject(400, `Invalid token ${req.body.token}.`));
+            return next(new ErrorObject(400, `Invalid or expired token. Try regenerating from Forgot password page.`));
         }
     } catch (e) {
         console.log(`Error in finding reset user model while resetting password: ${e}`);
         return next(new ErrorObject(500));
     }
-
-    // todo : Expirable token?
 
     // Email user found?
     const email = foundResetData.toJSON().email;
