@@ -1,22 +1,20 @@
 import React, {SyntheticEvent, useState} from 'react';
-import {Redirect, Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import {useSelector} from 'react-redux';
 
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {AUTH_STATE, STATE} from '../store/STATE_DEFINITIONS';
 import {useUserDispatcher, useAuthDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [redirect, setRedirect] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
-  const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
 
   const userDispatcher = useUserDispatcher();
   const authDispatcher = useAuthDispatcher();
+
+  const history = useHistory();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -32,7 +30,7 @@ function Login() {
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
-      setRedirect(true);
+      history.push('/');
       authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
       userDispatcher(ACTION_TYPES.USER.FILL_PII, {
         first_name: response.data.data.first_name,
@@ -44,10 +42,6 @@ function Login() {
       setResponseMessage(e.response.data.message);
       userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     }
-  }
-
-  if (redirect || authState.isSignedIn) {
-    return <Redirect to="/" />;
   }
 
   function renderForm() {

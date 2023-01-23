@@ -1,6 +1,6 @@
 import React, {SyntheticEvent} from 'react';
 import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
@@ -12,6 +12,7 @@ function HeaderNav() {
   const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
   const userDispatcher = useUserDispatcher();
   const authDispatcher = useAuthDispatcher();
+  const history = useHistory();
 
   async function onLogoutClickHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -22,6 +23,7 @@ function HeaderNav() {
     }
     userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
+    history.push('/login');
   }
 
   const loggedInUser = authState.isSignedIn;

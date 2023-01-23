@@ -1,13 +1,13 @@
 import React, {useState, SyntheticEvent} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
 
 function ResetPassword({match}: {match: any}) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [redirect, setRedirect] = useState(false);
   const [notification, setNotification] = useState({show: false, error: false, message: ''});
+  const history = useHistory();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -15,7 +15,7 @@ function ResetPassword({match}: {match: any}) {
       const token = match.params.token;
       await apiWrapper.post('/reset', {password, token, password_confirm: passwordConfirm});
       setNotification({show: true, error: false, message: `Password successfully reset. Try Logging in!`});
-      setRedirect(true);
+      history.push('/login');
     } catch (e) {
       setNotification({show: true, error: true, message: 'Problem occured!'});
     }
@@ -76,10 +76,6 @@ function ResetPassword({match}: {match: any}) {
       type: notification.error ? 'error' : 'success',
       toastId: 'Reset-Password',
     });
-  }
-
-  if (redirect) {
-    return <Redirect to="/login" />;
   }
 
   return renderForm();

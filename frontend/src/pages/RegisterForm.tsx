@@ -1,5 +1,5 @@
 import React, {SyntheticEvent, useRef, useState} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import {toast} from 'react-toastify';
 
@@ -13,8 +13,8 @@ function RegisterForm() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [responseMessage, setResponseMessage] = useState(null);
-  const [redirect, setRedirect] = useState(false);
   const recaptchaRef: any = useRef(null);
+  const history = useHistory();
 
   async function formSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -37,7 +37,7 @@ function RegisterForm() {
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
-      setRedirect(true);
+      history.push('/login');
     } catch (e: any) {
       setResponseMessage(e.response.data.message);
     }
@@ -113,10 +113,6 @@ function RegisterForm() {
       type: 'error',
       toastId: 'Login-Toast',
     });
-  }
-
-  if (redirect) {
-    return <Redirect to="/login" />;
   }
 
   return renderForm();

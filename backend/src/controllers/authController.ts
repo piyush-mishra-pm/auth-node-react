@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import {Joi} from 'express-validation';
 import bcryptjs from 'bcryptjs';
 import {sign, verify} from 'jsonwebtoken';
 
