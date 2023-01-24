@@ -10,8 +10,7 @@ export const registerValidation = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     password_confirm: Joi.string().required(),
-    captcha: Joi.string().required()
-});
+}).options({ allowUnknown: true });
 
 export const forgotValidation = Joi.object({
     email: Joi.string().email().required(),
@@ -26,4 +25,4 @@ export const resetValidation = Joi.object({
 export const loginValidation = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required(),
-});
+}).options({ allowUnknown: true });
