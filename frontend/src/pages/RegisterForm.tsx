@@ -6,6 +6,7 @@ import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
 import {useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
+import OAuth from '../components/OAuth';
 
 function RegisterForm() {
   // Creating State objects:
@@ -53,7 +54,9 @@ function RegisterForm() {
   function renderForm() {
     return (
       <div className="ui container" style={{width: '50%'}}>
-        <h1>Register</h1>
+        <OAuth />
+        <hr />
+        <h2>... or register below</h2>
         <form className="ui form" onSubmit={formSubmitHandler}>
           <div className="field required">
             <label>First Name</label>

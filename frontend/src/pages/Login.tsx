@@ -6,6 +6,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
 import {useUserDispatcher, useAuthDispatcher, useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
+import OAuth from '../components/OAuth';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -57,7 +58,9 @@ function Login() {
   function renderForm() {
     return (
       <div className="ui container" style={{width: '50%'}}>
-        <h1>Login</h1>
+        <OAuth />
+        <hr />
+        <h2>... Or Login below</h2>
         <form className="ui form" onSubmit={onSubmitHandler}>
           <div className="field">
             <label>Email</label>
@@ -83,13 +86,7 @@ function Login() {
             Submit
           </button>
         </form>
-        <Link to="/forgot">
-          <p>Forgot password?</p>
-        </Link>
         <br />
-        <Link to="/register">
-          <p>Register instead?</p>
-        </Link>
         <ReCAPTCHA ref={recaptchaRef} sitekey="6LdbU-QjAAAAAAjBAVr0hySl-CSxLyhIfp0evc21" />
         {responseMessage && (
           <div className="ui warning message">
@@ -97,6 +94,15 @@ function Login() {
             {responseMessage}
           </div>
         )}
+        <hr />
+        <Link to="/forgot">
+          <p>Forgot password?</p>
+        </Link>
+        <br />
+        <Link to="/register">
+          <p>Register instead?</p>
+        </Link>
+        <br />
       </div>
     );
   }
