@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { createTransport } from 'nodemailer';
 import bcryptjs from 'bcryptjs';
 
 import { ResetUserModel } from '../models/ResetUserModel';
 import { UserModel } from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 import { TOKEN_VAILIDITY_DURATION_IN_MINUTES } from '../models/ResetUserModel';
-const mailTransporter = createTransport({ host: '0.0.0.0', port: 1025 });
-
-
+import { defaultMailTemplate } from '../resources/mailTemplates';
 
 export async function forgot(req: Request, res: Response, next: NextFunction) {
     let email;
@@ -45,12 +42,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
     // Try sending the Forgot password mail containing token:
     try {
         const redirectUrl = `http://localhost:3000/reset/${token}`;
-        await mailTransporter.sendMail({
-            from: 'admin@example.com',
-            to: email,
-            subject: 'Reset your Password',
-            html: `Click <a href="${redirectUrl}">here</a> to reset Password`
-        });
+        await defaultMailTemplate(email, 'Reset Auth-Node-React password!', `Click <a href="${redirectUrl}">here</a> to reset Password`);
         return res.status(200).send({ success: 'true', message: `Send token to your registered Email. Will expire in ${TOKEN_VAILIDITY_DURATION_IN_MINUTES} minutes.`, data: { validity: tokenValidityLimitEpoch } });
     } catch (e) {
         console.log(`Error during Forgot password mail generation: ${e}`);
@@ -110,7 +102,7 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
     }
 
     // todo: Delete the token after it was used:
-
+    await defaultMailTemplate(email, 'Successfully reset password!', `Successfully reset your Auth-Node-React password!`);
     res.status(200).send({ success: 'true', message: 'Successfully changed password' });
     // todo: redirect, or clear cookies? So that tries to login again.
 }
