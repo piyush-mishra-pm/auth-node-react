@@ -42,11 +42,11 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
     // Try sending the Forgot password mail containing token:
     try {
         const redirectUrl = `http://localhost:3000/reset/${token}`;
-        await defaultMailTemplate(email, 'Reset Auth-Node-React password!', `Click <a href="${redirectUrl}">here</a> to reset Password`);
+        await defaultMailTemplate({ toMail: email, subject: 'Reset Auth-Node-React password!', html: `Click <a href="${redirectUrl}">here</a> to reset Password` });
         return res.status(200).send({ success: 'true', message: `Send token to your registered Email. Will expire in ${TOKEN_VAILIDITY_DURATION_IN_MINUTES} minutes.`, data: { validity: tokenValidityLimitEpoch } });
     } catch (e) {
         console.log(`Error during Forgot password mail generation: ${e}`);
-        return next(new ErrorObject(500));
+        return next(new ErrorObject(500, 'Error during forgot password mail generation.'));
     }
 }
 
@@ -102,7 +102,13 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
     }
 
     // todo: Delete the token after it was used:
-    await defaultMailTemplate(email, 'Successfully reset password!', `Successfully reset your Auth-Node-React password!`);
-    res.status(200).send({ success: 'true', message: 'Successfully changed password' });
+    try {
+        await defaultMailTemplate({ toMail: email, subject: 'Successfully reset password!', html: `Successfully reset your Auth-Node-React password!` });
+        res.status(200).send({ success: 'true', message: 'Successfully changed password' });
+    } catch (e) {
+        console.log(`Error during Reset password mail generation: ${e}`);
+        return next(new ErrorObject(500, 'Error during reset password mail generation.'));
+    }
+
     // todo: redirect, or clear cookies? So that tries to login again.
 }

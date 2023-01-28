@@ -31,7 +31,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
     const saveDbResult = await newUser.save();
     const {password, ...savedDbResultWithoutPassword} = saveDbResult.toJSON();
-    await defaultMailTemplate(req.body.email, 'Welcome to Auth-Node-React!', `Hi ${req.body.first_name} ${req.body.last_name}.</br>Welcome to Auth-Node-React.</br>Want to<a href='https://github.com/piyush-mishra-pm/auth-node-react'> visit the git repo</a>? </br> Link also here <pre>https://github.com/piyush-mishra-pm/auth-node-react</pre>`);
+    await defaultMailTemplate({ toMail: req.body.email, subject: 'Welcome to Auth-Node-React!', html: `Hi ${req.body.first_name} ${req.body.last_name}.</br>Welcome to Auth-Node-React.</br>Want to<a href='https://github.com/piyush-mishra-pm/auth-node-react'> visit the git repo</a>? </br> Link also here <pre>https://github.com/piyush-mishra-pm/auth-node-react</pre>` });
     return res.status(200).send({ success: "true", message: "Successfully created new user.", data: savedDbResultWithoutPassword });
   } catch (e) {
     console.log('SignUp failed: ', e);
