@@ -1,24 +1,29 @@
 import React, {useState, SyntheticEvent} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import apiWrapper from '../apis/apiWrapper';
+
+import {useHttpClient} from '../hooks/httpHook';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorModal from '../components/ErrorModal';
 
 function ResetPassword({match}: {match: any}) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [notification, setNotification] = useState({show: false, error: false, message: ''});
   const history = useHistory();
+  const {isLoading, error, sendRequest, clearErrorHandler} = useHttpClient();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
       const token = match.params.token;
-      await apiWrapper.post('/reset', {password, token, password_confirm: passwordConfirm});
-      setNotification({show: true, error: false, message: `Password successfully reset. Try Logging in!`});
+      await sendRequest({
+        successMessage: 'Password successfully reset. Try Logging in!',
+        url: '/reset',
+        method: 'POST',
+        body: {password, token, password_confirm: passwordConfirm},
+      });
       history.push('/login');
-    } catch (e) {
-      setNotification({show: true, error: true, message: 'Problem occured!'});
-    }
+    } catch (e) {}
   }
 
   function renderForm() {
@@ -60,25 +65,25 @@ function ResetPassword({match}: {match: any}) {
           <Link to="/register">
             <p>Register instead?</p>
           </Link>
-          {notification.show && (
-            <div className={`ui ${notification.error ? 'warning' : 'positive'} message`}>
-              <i className={`${notification.error ? 'warning' : 'positive'} icon`}></i>
-              {notification.message}
-            </div>
-          )}
         </div>
       </div>
     );
   }
 
-  if (notification.message) {
-    toast(notification.message, {
-      type: notification.error ? 'error' : 'success',
+  if (error) {
+    toast(error, {
+      type: 'error',
       toastId: 'Reset-Password',
     });
   }
 
-  return renderForm();
+  return (
+    <React.Fragment>
+      {isLoading && <LoadingSpinner />}
+      {error && <ErrorModal onCloseModal={clearErrorHandler} header={'Error!'} content={error} />}
+      {renderForm()}
+    </React.Fragment>
+  );
 }
 
 export default ResetPassword;
