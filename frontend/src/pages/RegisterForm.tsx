@@ -3,8 +3,10 @@ import {Link, useHistory} from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import {toast} from 'react-toastify';
 
-import apiWrapper from '../apis/apiWrapper';
 import OAuth from '../components/OAuth';
+import {useHttpClient} from '../hooks/httpHook';
+import ErrorModal from '../components/ErrorModal';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function RegisterForm() {
   // Creating State objects:
@@ -13,9 +15,9 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [responseMessage, setResponseMessage] = useState(null);
   const recaptchaRef: any = useRef(null);
   const history = useHistory();
+  const {isLoading, error, sendRequest, clearErrorHandler} = useHttpClient();
 
   async function formSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
@@ -24,24 +26,21 @@ function RegisterForm() {
       const captchaToken = recaptchaRef.current.getValue();
       recaptchaRef.current.reset();
 
-      const response = await apiWrapper.post('/register', {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-        password_confirm: passwordConfirm,
-        captcha: captchaToken,
+      await sendRequest({
+        url: '/register',
+        method: 'POST',
+        successMessage: '✅ Successfully registered! Please login.',
+        body: {
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+          password_confirm: passwordConfirm,
+          captcha: captchaToken,
+        },
       });
-      if (response.status >= 400) {
-        setResponseMessage(response.data.message);
-        throw Error(response.data.message);
-      } else setResponseMessage(null);
-
-      // Redirect, when sussessfully logged in:
       history.push('/login');
-    } catch (e: any) {
-      setResponseMessage(e.response.data.message);
-    }
+    } catch (e: any) {}
   }
 
   function renderForm() {
@@ -101,24 +100,24 @@ function RegisterForm() {
           <ReCAPTCHA ref={recaptchaRef} sitekey="6LdbU-QjAAAAAAjBAVr0hySl-CSxLyhIfp0evc21" />
         </form>
         <Link to="/login">Login instead?</Link>
-        {responseMessage && (
-          <div className="ui warning message">
-            <i className="warning icon"></i>
-            {responseMessage}
-          </div>
-        )}
       </div>
     );
   }
 
-  if (responseMessage) {
-    toast(responseMessage, {
+  if (error) {
+    toast(error, {
       type: 'error',
       toastId: 'Login-Toast',
     });
   }
 
-  return renderForm();
+  return (
+    <React.Fragment>
+      {isLoading && <LoadingSpinner />}
+      {error && <ErrorModal onCloseModal={clearErrorHandler} header={'Error!'} content={error} />}
+      {renderForm()}
+    </React.Fragment>
+  );
 }
 
 export default RegisterForm;
