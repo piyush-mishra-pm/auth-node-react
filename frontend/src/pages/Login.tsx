@@ -26,10 +26,15 @@ function Login() {
       const captchaToken = recaptchaRef.current.getValue();
       recaptchaRef.current.reset();
 
-      const response = await sendRequest('Login successful!', '/login', 'POST', {
-        email,
-        password,
-        captcha: captchaToken,
+      const response = await sendRequest({
+        successMessage: 'Login successful!',
+        url: '/login',
+        method: 'POST',
+        body: {
+          email,
+          password,
+          captcha: captchaToken,
+        },
       });
       authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.userId, jwt: response.data.jwt});
       userDispatcher(ACTION_TYPES.USER.FILL_PII, {

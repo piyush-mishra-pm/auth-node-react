@@ -1,23 +1,27 @@
 import React, {SyntheticEvent, useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import apiWrapper from '../apis/apiWrapper';
+import {useHttpClient} from '../hooks/httpHook';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorModal from '../components/ErrorModal';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const [notification, setNotification] = useState({show: false, error: false, message: ''});
   const history = useHistory();
+  const {isLoading, error, sendRequest, clearErrorHandler} = useHttpClient();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      await apiWrapper.post('/forgot', {email});
-      setNotification({show: true, error: false, message: `Please Check the Email: ${email}`});
+      await sendRequest({
+        successMessage: `Please Check the Email: ${email}`,
+        url: '/forgot',
+        method: 'POST',
+        body: {email},
+      });
       setEmail('');
       history.push('/reset_mail_sent');
-    } catch (e) {
-      setNotification({show: true, error: true, message: 'Problem occured! Is this email registered'});
-    }
+    } catch (e: any) {}
   }
 
   function renderForm() {
@@ -48,22 +52,25 @@ function ForgotPassword() {
           <Link to="/register">
             <p>Register instead?</p>
           </Link>
-          {notification.show && (
-            <div className={`ui ${notification.error ? 'warning' : 'positive'} message`}>
-              <i className={`${notification.error ? 'warning' : 'positive'} icon`}></i>
-              {notification.message}
-            </div>
-          )}
         </div>
       </div>
     );
   }
 
-  if (notification.show) {
-    toast(notification.message, {type: notification.error ? 'error' : 'success', toastId: 'ForgotPassword'});
+  if (error) {
+    toast(error, {
+      type: 'error',
+      toastId: 'ForgotPassword',
+    });
   }
 
-  return renderForm();
+  return (
+    <React.Fragment>
+      {isLoading && <LoadingSpinner />}
+      {error && <ErrorModal onCloseModal={clearErrorHandler} header={'Error!'} content={error} />}
+      {renderForm()}
+    </React.Fragment>
+  );
 }
 
 export default ForgotPassword;
