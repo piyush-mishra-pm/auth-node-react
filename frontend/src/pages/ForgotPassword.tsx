@@ -2,28 +2,22 @@ import React, {SyntheticEvent, useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
-import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [notification, setNotification] = useState({show: false, error: false, message: ''});
-  const uiDispatcher = useUiDispatcher();
   const history = useHistory();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
     try {
       await apiWrapper.post('/forgot', {email});
       setNotification({show: true, error: false, message: `Please Check the Email: ${email}`});
       setEmail('');
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
       history.push('/reset_mail_sent');
     } catch (e) {
       setNotification({show: true, error: true, message: 'Problem occured! Is this email registered'});
     }
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
   }
 
   function renderForm() {

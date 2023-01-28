@@ -9,11 +9,6 @@ const ACTION_TYPES = {
     FILL_PII: 'FILL_PII',
     RESET_PII: 'RESET_PII',
   },
-
-  UI: {
-    SET_LOADING_SPINNER_STATE: 'SET_LOADING_SPINNER_STATE',
-    RESET_UI: 'RESET_UI',
-  },
 };
 
 export default ACTION_TYPES;

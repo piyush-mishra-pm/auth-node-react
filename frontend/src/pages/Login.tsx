@@ -3,56 +3,45 @@ import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {useUserDispatcher, useAuthDispatcher, useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
+import {useUserDispatcher, useAuthDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 import OAuth from '../components/OAuth';
+import {useHttpClient} from '../hooks/httpHook';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorModal from '../components/ErrorModal';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [responseMessage, setResponseMessage] = useState(null);
   const recaptchaRef: any = useRef(null);
-
+  const {isLoading, error, sendRequest, clearErrorHandler} = useHttpClient();
   const userDispatcher = useUserDispatcher();
   const authDispatcher = useAuthDispatcher();
-  const uiDispatcher = useUiDispatcher();
 
   const history = useHistory();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
-
       const captchaToken = recaptchaRef.current.getValue();
       recaptchaRef.current.reset();
 
-      const response = await apiWrapper.post('/login', {
+      const response = await sendRequest('Login successful!', '/login', 'POST', {
         email,
         password,
         captcha: captchaToken,
       });
-      if (response.status >= 400) {
-        authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
-        userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
-        setResponseMessage(response.data.message);
-      } else setResponseMessage(null);
-
-      authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.data.userId, jwt: response.data.data.jwt});
+      authDispatcher(ACTION_TYPES.AUTH.SIGN_IN, {userId: response.data.userId, jwt: response.data.jwt});
       userDispatcher(ACTION_TYPES.USER.FILL_PII, {
-        first_name: response.data.data.first_name,
-        last_name: response.data.data.last_name,
-        email: response.data.data.email,
+        first_name: response.data.first_name,
+        last_name: response.data.last_name,
+        email: response.data.email,
       });
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
       history.push('/');
     } catch (e: any) {
       authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
-      setResponseMessage(e.response.data.message);
       userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     }
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
   }
 
   function renderForm() {
@@ -88,13 +77,13 @@ function Login() {
         </form>
         <br />
         <ReCAPTCHA ref={recaptchaRef} sitekey="6LdbU-QjAAAAAAjBAVr0hySl-CSxLyhIfp0evc21" />
-        {responseMessage && (
+        <hr />
+        {error && (
           <div className="ui warning message">
             <i className="warning icon"></i>
-            {responseMessage}
+            {error}
           </div>
         )}
-        <hr />
         <Link to="/forgot">
           <p>Forgot password?</p>
         </Link>
@@ -107,14 +96,20 @@ function Login() {
     );
   }
 
-  if (responseMessage) {
-    toast(responseMessage, {
+  if (error) {
+    toast(error, {
       type: 'error',
       toastId: 'Login-Toast',
     });
   }
 
-  return renderForm();
+  return (
+    <React.Fragment>
+      {isLoading && <LoadingSpinner />}
+      {error && <ErrorModal onCloseModal={clearErrorHandler} header={'Login error'} content={error} />}
+      {renderForm()}
+    </React.Fragment>
+  );
 }
 
 export default Login;

@@ -4,8 +4,6 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import {toast} from 'react-toastify';
 
 import apiWrapper from '../apis/apiWrapper';
-import {useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
-import ACTION_TYPES from '../store/actions/ACTION_TYPES';
 import OAuth from '../components/OAuth';
 
 function RegisterForm() {
@@ -18,13 +16,10 @@ function RegisterForm() {
   const [responseMessage, setResponseMessage] = useState(null);
   const recaptchaRef: any = useRef(null);
   const history = useHistory();
-  const uiDispatcher = useUiDispatcher();
 
   async function formSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
-
       // Get Captcha and then reset Captcha.
       const captchaToken = recaptchaRef.current.getValue();
       recaptchaRef.current.reset();
@@ -43,12 +38,10 @@ function RegisterForm() {
       } else setResponseMessage(null);
 
       // Redirect, when sussessfully logged in:
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
       history.push('/login');
     } catch (e: any) {
       setResponseMessage(e.response.data.message);
     }
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
   }
 
   function renderForm() {

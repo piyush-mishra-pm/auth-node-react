@@ -1,5 +1,3 @@
-import { UI_PAYLOAD } from "./PAYLOAD_DEFINITIONS";
-
 export interface AUTH_STATE {
     isSignedIn: boolean | null | undefined;
     userId: String | null | undefined;
@@ -15,5 +13,4 @@ export interface USER_STATE {
 export interface STATE {
     auth: AUTH_STATE;
     user: USER_STATE;
-    ui: UI_PAYLOAD;
 }

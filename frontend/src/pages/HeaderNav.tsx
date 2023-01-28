@@ -5,19 +5,17 @@ import {Link, useHistory} from 'react-router-dom';
 import apiWrapper from '../apis/apiWrapper';
 import ACTION_TYPES from '../store/actions/ACTION_TYPES';
 import {AUTH_STATE, STATE} from '../store/STATE_DEFINITIONS';
-import {useUserDispatcher, useAuthDispatcher, useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
+import {useUserDispatcher, useAuthDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 // todo: control 'active' tab, depending upon which screen is current screen.
 function HeaderNav() {
   const authState: AUTH_STATE = useSelector((state: STATE) => state.auth);
   const userDispatcher = useUserDispatcher();
   const authDispatcher = useAuthDispatcher();
-  const uiDispatcher = useUiDispatcher();
   const history = useHistory();
 
   async function onLogoutClickHandler(e: SyntheticEvent) {
     e.preventDefault();
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
     try {
       await apiWrapper.post('/logout', {});
     } catch (err) {
@@ -25,7 +23,6 @@ function HeaderNav() {
     }
     userDispatcher(ACTION_TYPES.USER.RESET_PII, undefined);
     authDispatcher(ACTION_TYPES.AUTH.SIGN_OUT, undefined);
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
     history.push('/login');
   }
 

@@ -2,29 +2,23 @@ import React, {useState, SyntheticEvent} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import apiWrapper from '../apis/apiWrapper';
-import ACTION_TYPES from '../store/actions/ACTION_TYPES';
-import {useUiDispatcher} from '../store/actions/DISPATCH_HOOK_REGISTRY';
 
 function ResetPassword({match}: {match: any}) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [notification, setNotification] = useState({show: false, error: false, message: ''});
   const history = useHistory();
-  const uiDispatcher = useUiDispatcher();
 
   async function onSubmitHandler(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: true});
       const token = match.params.token;
       await apiWrapper.post('/reset', {password, token, password_confirm: passwordConfirm});
       setNotification({show: true, error: false, message: `Password successfully reset. Try Logging in!`});
-      uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
       history.push('/login');
     } catch (e) {
       setNotification({show: true, error: true, message: 'Problem occured!'});
     }
-    uiDispatcher(ACTION_TYPES.UI.SET_LOADING_SPINNER_STATE, {isLoading: false});
   }
 
   function renderForm() {
