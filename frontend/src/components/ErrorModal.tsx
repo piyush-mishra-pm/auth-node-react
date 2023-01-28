@@ -1,12 +1,18 @@
 import React from 'react';
-import Modal, {ModalProps} from './Modal';
+import Modal from './Modal';
 
-function ErrorModal(props: ModalProps) {
+export interface ErrorModalProps {
+  header: string;
+  onCloseModal: () => void;
+  content: string;
+}
+
+function ErrorModal(props: ErrorModalProps) {
   return (
     <Modal
       header={<h2>{props.header}</h2>}
       onCloseModal={props.onCloseModal}
-      content={props.content}
+      content={<p>{props.content}</p>}
       modalActions={
         <button className="ui button negative" onClick={props.onCloseModal}>
           OK

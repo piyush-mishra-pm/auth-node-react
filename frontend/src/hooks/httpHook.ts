@@ -9,7 +9,9 @@ export const useHttpClient = () => {
     const activeHttpRequests = useRef<AbortController[]>([]); // Stores data across re-render cycles.
 
     const sendRequest = useCallback(
-        async (url: string, method: any = 'GET', body: any = null, headers: any = {}, timeout: number = 0) => {
+        async (successMessage: string = 'Successful!', url: string, method: any = 'GET', body: any = null, headers: any = {
+            'Content-Type': 'application/json'
+        }, timeout: number = 0) => {
             setIsLoading(true);
 
             const httpAbortController = new AbortController();
@@ -24,9 +26,9 @@ export const useHttpClient = () => {
                     timeout,
                     headers,
                 }), {
-                    pending: 'Promise is pending',
-                    success: 'Promise resolved 👌',
-                    error: 'Promise rejected 🤯'
+                    // pending: 'Promise is pending', // Using LoadingSpinner component
+                    success: `${successMessage} 👌`,
+                    // error: 'Promise rejected 🤯' // Using ErrorModal for this.
                 });
 
                 const data = await response.data;
@@ -37,7 +39,8 @@ export const useHttpClient = () => {
 
                 return data;
             } catch (err: any) {
-                setError(err.message || 'Something went wrong!'); // Default error message shouldn't be required, as backend has a default error message anyways.
+                console.log(err);
+                setError(err.response.data.message);
                 throw err;
             } finally {
                 setIsLoading(false);
