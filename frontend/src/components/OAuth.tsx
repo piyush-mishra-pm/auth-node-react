@@ -5,10 +5,10 @@ function OAuth() {
     <div className="ui segment">
       <h2>Login with Google</h2>
       <div className="ui container">
-        <button className="ui google plus button">
+        <a className="ui google plus button" href="http://localhost:8000/api/v1/auth/google">
           <i className="google plus icon"></i>
           Google Login
-        </button>
+        </a>
       </div>
     </div>
   );

@@ -49,9 +49,13 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     }
 
     // Whether Password matched:
-    const isPasswordMatching = await bcryptjs.compare(req.body.password, foundUser.password);
-    if (!isPasswordMatching) {
-      return next(new ErrorObject(400, 'Invalid Credentials!'));
+    if (foundUser.password) {
+      const isPasswordMatching = await bcryptjs.compare(req.body.password, foundUser.password);
+      if (!isPasswordMatching) {
+        return next(new ErrorObject(400, 'Invalid Credentials!'));
+      }
+    } else {
+      return next(new ErrorObject(400, 'Invalid Credentials. Did you use oAuth instead?'));
     }
 
     // Create JWT:
@@ -96,7 +100,17 @@ export async function user(req: Request, res: Response, next: NextFunction) {
       return next(new ErrorObject(400, 'Unauthenticated! Please register!'));
     }
     const { password, ...restUserDataWithoutPassword } = userFound.toJSON();
-    return res.status(200).send({ success: 'true', message: 'Successfully opened user!', data: restUserDataWithoutPassword });
+    // todo: no need to pass jwt and userId in body. JWT already in cookies.
+    // Client doesn't need these two fields.
+    return res.status(200).send({
+      success: 'true', message: 'Successfully opened user!', data: {
+        jwt: req.cookies['jwt'],
+        userId: userFound._id,
+        first_name: userFound.first_name,
+        last_name: userFound.last_name,
+        email: userFound.email
+      }
+    });
   } catch (e) {
     next(new ErrorObject(500, 'Something wrong happened while getting user.'));
   }

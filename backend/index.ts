@@ -7,6 +7,10 @@ import cookieParser from 'cookie-parser';
 
 import {configureRouter} from './src/api/v1/routes';
 import ErrorObject from './src/utils/ErrorObject';
+import passport from 'passport';
+require('./src/models/UserModel');
+
+import oAuthRouter from './src/api/v1/oAuthRoutes';
 
 mongoose
   .connect(process.env.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
@@ -19,6 +23,10 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+app.use(passport.initialize());
+require('./src/services/passport');
+app.use('/api/v1', oAuthRouter);
 
 configureRouter(app);
 
@@ -40,23 +48,3 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.listen(process.env.PORT || 8000, () => {
   console.log('listeing on port 8000');
 });
-
-
-// //Sendgrid:
-// const sgMail = require('@sendgrid/mail')
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-// const msg = {
-//   to: 'ifs.piyushmishra1991@gmail.com', // Change to your recipient
-//   from: 'ifs.piyushmishra1991@gmail.com', // Change to your verified sender
-//   subject: 'Sending with SendGrid is Fun',
-//   text: 'and easy to do anywhere, even with Node.js',
-//   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-// };
-// sgMail
-//   .send(msg)
-//   .then(() => {
-//     console.log('Email sent')
-//   })
-//   .catch((error: any) => {
-//     console.error(error)
-//   });
