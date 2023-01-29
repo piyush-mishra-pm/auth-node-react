@@ -12,8 +12,6 @@ passport.use(
         },
         async (_accessToken, _refreshToken, profile, done) => {
             // is Existing user?
-            console.log('From Google callback:', profile);
-
             const existingUser = await UserModel.findOne({ $or: [{ 'googleId': profile._json.sub }, { 'email': profile._json.email }] });
             if (existingUser) {
                 return done(null, existingUser);
