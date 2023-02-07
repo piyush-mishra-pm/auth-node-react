@@ -6,12 +6,12 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import {configureRouter} from './src/api/v1/routes';
-import ErrorObject from './src/utils/ErrorObject';
+import { configureRouter } from './api/v1/routes';
+import ErrorObject from './utils/ErrorObject';
 import passport from 'passport';
-require('./src/models/UserModel');
+import * as UserModel from './models/UserModel';
 
-import oAuthRouter from './src/api/v1/oAuthRoutes';
+import oAuthRouter from './api/v1/oAuthRoutes';
 
 mongoose
   .connect(process.env.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(passport.initialize());
-require('./src/services/passport');
+import * as passoportService from './services/passport';
 app.use('/api/v1', oAuthRouter);
 
 configureRouter(app);
