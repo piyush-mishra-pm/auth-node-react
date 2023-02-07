@@ -1,4 +1,5 @@
-require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
