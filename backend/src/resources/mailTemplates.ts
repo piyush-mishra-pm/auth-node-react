@@ -3,7 +3,7 @@ import { mailTransporter } from "../services/mailer";
 
 import sgMail from "../services/sendGrid";
 
-const USE_SENDGRID = false;
+const USE_SENDGRID = true;
 
 export interface mailerProps {
     toMail: string;

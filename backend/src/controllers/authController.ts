@@ -5,6 +5,7 @@ import {sign, verify} from 'jsonwebtoken';
 import {UserModel} from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 import { defaultMailTemplate } from '../resources/mailTemplates';
+import * as KEYS from '../config/envKeys';
 
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
@@ -19,7 +20,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     }
 
     // Salting Password:
-    const salt = await bcryptjs.genSalt(process.env.SALT_ROUNDS ? parseInt(process.env.SALT_ROUNDS) : 10);
+    const salt = await bcryptjs.genSalt(KEYS.SALT_ROUNDS ? parseInt(KEYS.SALT_ROUNDS) : 10);
     const encryptedPassword = await bcryptjs.hash(req.body.password, salt);
 
     const newUser = new UserModel({
@@ -59,7 +60,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     }
 
     // Create JWT:
-    const token = sign({_id: foundUser._id}, process.env.JWT_SECRET || 'secret_key');
+    const token = sign({ _id: foundUser._id }, KEYS.JWT_SECRET || 'secret_key');
 
     // Send JWT in Cookies and body:
     res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // 1day expiry
@@ -85,7 +86,7 @@ export async function user(req: Request, res: Response, next: NextFunction) {
   let jwtPayload: any;
   try {
     const jwtCookie = req.cookies['jwt'];
-    jwtPayload = verify(jwtCookie, process.env.JWT_SECRET || 'secret_key');
+    jwtPayload = verify(jwtCookie, KEYS.JWT_SECRET || 'secret_key');
     if (!jwtPayload) {
       return next(new ErrorObject(400, 'Unauthenticated user.'));
     }

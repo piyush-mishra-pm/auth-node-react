@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { sign } from 'jsonwebtoken';
 import passport from 'passport';
 
+import * as KEYS from '../../config/envKeys';
+
 const oAuthRouter = Router();
 
 oAuthRouter.get(
@@ -15,9 +17,9 @@ oAuthRouter.get(
     '/auth/google/callback',
     passport.authenticate('google', { session: false, failureRedirect: '/login' }),
     async (req: any, res) => {
-        const token = sign({ _id: req.user._id }, process.env.JWT_SECRET || 'secret_key');
+        const token = sign({ _id: req.user._id }, KEYS.JWT_SECRET || 'secret_key');
         res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // 1day expiry
-        res.redirect(process.env.AUTH_SUCCESS_REDIRECT + '/' + token || '/');
+        res.redirect(KEYS.AUTH_SUCCESS_REDIRECT + '/' + token || '/');
     }
 );
 

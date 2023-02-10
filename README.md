@@ -2,6 +2,9 @@
 
 _A reusable starter kit of node react JWT based authentication._
 
+Backend hosted at: https://auth-node-react.onrender.com
+Frontend hosted at: https://auth-node-react.netlify.app
+
 ### **Frontend Walkthrough:** 
 
 Video Walkthorugh of UX:

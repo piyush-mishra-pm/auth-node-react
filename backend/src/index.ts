@@ -1,5 +1,4 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
+import * as KEYS from './config/envKeys';
 
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
@@ -14,7 +13,7 @@ import * as UserModel from './models/UserModel';
 import oAuthRouter from './api/v1/oAuthRoutes';
 
 mongoose
-  .connect(process.env.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
+  .connect(KEYS.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
   .then(() => console.log('Connected to db'))
   .catch(() => console.log('Error connecting to DB'));
 
@@ -46,6 +45,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.send('invalid path')
 });
 
-app.listen(process.env.PORT || 8000, () => {
+app.listen(KEYS.PORT_BE || 8000, () => {
   console.log('listeing on port 8000');
 });

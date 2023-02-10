@@ -6,6 +6,7 @@ import { UserModel } from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
 import { TOKEN_VAILIDITY_DURATION_IN_MINUTES } from '../models/ResetUserModel';
 import { defaultMailTemplate } from '../resources/mailTemplates';
+import * as KEYS from '../config/envKeys';
 
 export async function forgot(req: Request, res: Response, next: NextFunction) {
     let email;
@@ -89,7 +90,7 @@ export async function reset(req: Request, res: Response, next: NextFunction) {
     }
 
     // Creating new password:
-    const salt = await bcryptjs.genSalt(process.env.SALT_ROUNDS ? parseInt(process.env.SALT_ROUNDS) : 10);
+    const salt = await bcryptjs.genSalt(KEYS.SALT_ROUNDS ? parseInt(KEYS.SALT_ROUNDS) : 10);
     const hashedNewPassword = await bcryptjs.hash(req.body.password, salt);
 
     // Setting new password:

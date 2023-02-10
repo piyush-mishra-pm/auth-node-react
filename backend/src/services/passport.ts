@@ -2,12 +2,13 @@ import passport from 'passport';
 import GoogleStrategy from 'passport-google-oauth20';
 import { UserModel } from '../models/UserModel';
 import ErrorObject from '../utils/ErrorObject';
+import * as KEYS from '../config/envKeys';
 
 passport.use(
     new GoogleStrategy.Strategy(
         {
-            clientID: process.env.GOOGLE_OAUTH_CLIENT_ID || '', // stored in env variables.
-            clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '', // stored in env variables.
+            clientID: KEYS.GOOGLE_OAUTH_CLIENT_ID || '', // stored in env variables.
+            clientSecret: KEYS.GOOGLE_OAUTH_CLIENT_SECRET || '', // stored in env variables.
             callbackURL: '/api/v1/auth/google/callback',
         },
         async (_accessToken, _refreshToken, profile, done) => {
