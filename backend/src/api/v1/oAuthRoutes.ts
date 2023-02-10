@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Router } from 'express';
 import { sign } from 'jsonwebtoken';
 import passport from 'passport';
 
@@ -33,7 +33,7 @@ oAuthRouter.get('/logout', (req, res) => {
 oAuthRouter.get(
     '/profile',
     passport.authenticate('jwt', { session: false, failureRedirect: '/login' }),
-    (req, res) => {
+    (req: any, res) => {
         res.render('profile', { user: req.user });
     }
 );
