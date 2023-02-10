@@ -24,6 +24,7 @@ export const useHttpClient = () => {
             activeHttpRequests.current.push(httpAbortController);
 
             try {
+                console.log(apiWrapper.getUri());
                 const response = await toast.promise(apiWrapper.request({
                     data: props.body || null,
                     signal: httpAbortController.signal,
