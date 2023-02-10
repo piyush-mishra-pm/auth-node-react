@@ -97,7 +97,7 @@ function RegisterForm() {
           <button className="ui button" type="submit">
             Submit
           </button>
-          <ReCAPTCHA ref={recaptchaRef} sitekey="6LdbU-QjAAAAAAjBAVr0hySl-CSxLyhIfp0evc21" />
+          <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.RECAPTCHA_KEYS}`} />
         </form>
         <Link to="/login">Login instead?</Link>
       </div>
