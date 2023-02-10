@@ -23,7 +23,21 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ methods: 'GET, POST, PUT, PATCH, DELETE', origin: KEYS.FE_ORIGIN, credentials: true }));
+
+const domainsFromEnv = KEYS.FE_ORIGIN || ""
+
+const whitelist = domainsFromEnv.split(",").map(item => item.trim())
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
+}
 
 app.use(passport.initialize());
 import * as passoportService from './services/passport';
