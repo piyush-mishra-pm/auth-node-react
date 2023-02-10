@@ -37,7 +37,11 @@ const corsOptions = {
     }
   },
   credentials: true,
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 }
+app.options('*', cors(corsOptions));
+
+app.use(cors(corsOptions))
 
 app.use(passport.initialize());
 import * as passoportService from './services/passport';
