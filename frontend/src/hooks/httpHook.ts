@@ -30,7 +30,7 @@ export const useHttpClient = () => {
                     signal: httpAbortController.signal,
                     method: props.method || 'GET',
                     url: props.url || '',
-                    timeout: props.timeout || 0,
+                    timeout: props.timeout || 60000,//1min
                     headers: props.headers || {
                         'Content-Type': 'application/json'
                     },
