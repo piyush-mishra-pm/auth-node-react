@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: process.env.BE_API + '/api/v1',
+  baseURL: process.env.REACT_APP_BE_API + '/api/v1',
   withCredentials: true,
 });

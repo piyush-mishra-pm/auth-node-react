@@ -81,7 +81,7 @@ function Login() {
           </button>
         </form>
         <br />
-        <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.RECAPTCHA_KEYS}`} />
+        <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
         <hr />
         {error && (
           <div className="ui warning message">
