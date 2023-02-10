@@ -44,7 +44,7 @@ app.options('*', cors(corsOptions));
 app.use(cors(corsOptions))
 
 app.use(passport.initialize());
-import * as passoportService from './services/passport';
+import './services/passport';
 app.use('/api/v1', oAuthRouter);
 
 configureRouter(app);

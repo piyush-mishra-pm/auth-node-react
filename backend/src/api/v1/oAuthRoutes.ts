@@ -8,7 +8,7 @@ const oAuthRouter = Router();
 
 oAuthRouter.get(
     '/auth/google',
-    passport.authenticate('google', {
+    passport.authenticate("google", {
         scope: ['profile', 'email'],
     })
 );
