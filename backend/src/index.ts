@@ -33,6 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cors({ credentials: true }));
+
 app.use(passport.initialize());
 import * as passoportService from './services/passport';
 app.use('/api/v1', oAuthRouter);
