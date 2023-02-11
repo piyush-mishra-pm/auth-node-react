@@ -19,7 +19,7 @@ oAuthRouter.get(
     async (req: any, res) => {
         console.log('>> Post passport_authenticate: ');
         const token = sign({ _id: req.user._id }, KEYS.JWT_SECRET || 'secret_key');
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // 1day expiry
+        res.cookie('jwt', token, { httpOnly: true, sameSite: KEYS.NODE_ENV === 'production' ? 'none' : 'lax', secure: KEYS.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 }); // 1day expiry
         res.redirect(KEYS.AUTH_SUCCESS_REDIRECT + '/' + token || '/');
     }
 );
