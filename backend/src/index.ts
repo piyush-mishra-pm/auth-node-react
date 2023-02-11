@@ -64,6 +64,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.send('invalid path')
 });
 
-app.listen(KEYS.PORT_BE || 8000, () => {
+app.listen(KEYS.PORT || 8000, () => {
   console.log('listeing on port 8000');
 });
