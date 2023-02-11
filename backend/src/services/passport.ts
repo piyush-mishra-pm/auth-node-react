@@ -41,4 +41,4 @@ passport.deserializeUser((id: any, done) => {
         console.log('Error in deserializing user', e);
         done(new ErrorObject(500))
     });
-});
+}); 
