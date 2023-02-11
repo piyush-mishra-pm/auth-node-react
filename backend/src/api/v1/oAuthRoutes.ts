@@ -15,6 +15,9 @@ oAuthRouter.get(
 
 oAuthRouter.get(
     '/auth/google/callback',
+    (req, res) => {
+        console.log(req);
+    },
     passport.authenticate('google', { session: false, failureRedirect: '/login' }),
     async (req: any, res) => {
         const token = sign({ _id: req.user._id }, KEYS.JWT_SECRET || 'secret_key');

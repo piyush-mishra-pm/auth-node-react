@@ -23,8 +23,18 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
 app.use(cookieParser());
 
+const domainsFromEnv = KEYS.FE_ORIGIN || ""
+
+const whitelist = domainsFromEnv.split(",").map(item => item.trim())
+
 const corsOptions = {
-  origin: '*',
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
   credentials: true,
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 }
