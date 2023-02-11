@@ -13,11 +13,12 @@ passport.use(
         },
         async (_accessToken, _refreshToken, profile, done) => {
             // is Existing user?
+            console.log('>> Profile: ', profile);
             const existingUser = await UserModel.findOne({ $or: [{ 'googleId': profile._json.sub }, { 'email': profile._json.email }] });
             if (existingUser) {
                 return done(null, existingUser);
             }
-
+            console.log('>>new user.');
             // is New User?
             try {
                 const user = await new UserModel({ first_name: profile._json.given_name, last_name: profile._json.family_name, googleId: profile.id, email: profile._json.email }).save();
