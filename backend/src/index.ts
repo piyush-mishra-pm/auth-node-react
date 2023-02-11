@@ -36,8 +36,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  optionsSuccessStatus: 204,
-  preflightContinue: true,
+  optionsSuccessStatus: 200,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 }
 app.options('*', cors(corsOptions));
