@@ -63,7 +63,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const token = sign({ _id: foundUser._id }, KEYS.JWT_SECRET || 'secret_key');
 
     // Send JWT in Cookies and body:
-    res.cookie('jwt', token, { httpOnly: true, sameSite: KEYS.NODE_ENV === 'production' ? 'none' : 'lax', secure: KEYS.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 }); // 1day expiry
+    res.cookie('jwt', token, { sameSite: KEYS.NODE_ENV === 'production' ? 'none' : 'lax', secure: KEYS.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 }); // 1day expiry
     res.status(200).send({
       success: 'true',
       message: 'Successfully logged in!',
@@ -119,6 +119,6 @@ export async function user(req: Request, res: Response, next: NextFunction) {
 
 export async function logout(req: Request, res: Response) {
   // deleting the JWT cookie.
-  res.cookie('jwt', '', { httpOnly: true, sameSite: KEYS.NODE_ENV === 'production' ? 'none' : 'lax', secure: KEYS.NODE_ENV === 'production', maxAge: 0 });
+  res.cookie('jwt', '', { sameSite: KEYS.NODE_ENV === 'production' ? 'none' : 'lax', secure: KEYS.NODE_ENV === 'production', maxAge: 0 });
   res.status(200).send({ success: 'true', message: 'Logged out successfully!' });
 }
