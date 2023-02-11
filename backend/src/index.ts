@@ -13,9 +13,12 @@ import * as UserModel from './models/UserModel';
 import oAuthRouter from './api/v1/oAuthRoutes';
 
 mongoose
-  .connect(KEYS.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
-  .then(() => console.log('Connected to db'))
-  .catch(() => console.log('Error connecting to DB'));
+  .connect(KEYS.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react');
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+  console.log("Connected successfully");
+});
 
 const app = express();
 
