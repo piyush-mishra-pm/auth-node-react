@@ -13,12 +13,9 @@ import * as UserModel from './models/UserModel';
 import oAuthRouter from './api/v1/oAuthRoutes';
 
 mongoose
-  .connect(KEYS.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react');
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error: "));
-db.once("open", function () {
-  console.log("Connected successfully");
-});
+  .connect(KEYS.MONGO_DB_URL || 'mongodb://localhost:27017/auth_node_react')
+  .then(() => console.log('Connected to db'))
+  .catch(() => console.log('Error connecting to DB'));
 
 const app = express();
 
@@ -45,8 +42,8 @@ app.options('*', cors(corsOptions));
 
 app.use(cors(corsOptions))
 
-app.use(passport.initialize());
 import './services/passport';
+app.use(passport.initialize());
 app.use('/api/v1', oAuthRouter);
 
 configureRouter(app);
