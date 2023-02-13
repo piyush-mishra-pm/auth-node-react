@@ -94,10 +94,11 @@ function RegisterForm() {
               onChange={(e) => setPasswordConfirm(e.target.value)}
             />
           </div>
+          <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
+          <br />
           <button className="ui button" type="submit">
             Submit
           </button>
-          <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
         </form>
         <Link to="/login">Login instead?</Link>
       </div>

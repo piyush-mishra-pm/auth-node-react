@@ -76,12 +76,14 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
+          <br />
           <button className="ui button" type="submit">
             Submit
           </button>
         </form>
         <br />
-        <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
+
         <hr />
         {error && (
           <div className="ui warning message">
