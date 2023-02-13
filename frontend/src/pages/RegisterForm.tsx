@@ -101,6 +101,12 @@ function RegisterForm() {
           </button>
         </form>
         <Link to="/login">Login instead?</Link>
+        {error && (
+          <div className="ui warning message">
+            <i className="warning icon"></i>
+            {error}
+          </div>
+        )}
       </div>
     );
   }
