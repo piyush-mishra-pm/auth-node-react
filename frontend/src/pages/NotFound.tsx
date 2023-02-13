@@ -11,7 +11,7 @@ function NotFound() {
       </h2>
       <div className="ui center aligned container">
         <p className="ui warning message">
-          URL <span style={{fontStyle: 'italic'}}> localhost:3000{location.pathname}</span> doesn't exist.
+          URL <span style={{fontStyle: 'italic'}}> {location.pathname}</span> doesn't exist.
         </p>
       </div>
     </div>

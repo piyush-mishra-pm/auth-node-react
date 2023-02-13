@@ -11,5 +11,6 @@ module.exports = {
   AUTH_SUCCESS_REDIRECT: process.env.AUTH_SUCCESS_REDIRECT,
   AUTH_FAILURE_REDIRECT: process.env.AUTH_FAILURE_REDIRECT,
   FE_ORIGIN: process.env.FE_ORIGIN,
+  FE_URI: process.env.FE_URI,
   NODE_ENV: process.env.NODE_ENV,
 };
