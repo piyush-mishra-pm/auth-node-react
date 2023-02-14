@@ -43,7 +43,7 @@ export async function forgot(req: Request, res: Response, next: NextFunction) {
     // Try sending the Forgot password mail containing token:
     try {
         const redirectUrl = `${KEYS.FE_URI}/reset/${token}`;
-        await defaultMailTemplate({ toMail: email, subject: 'Reset Auth-Node-React password!', html: `Click <a href="${redirectUrl}">here</a> to reset Password` });
+        await defaultMailTemplate({ toMail: email, subject: 'Reset Auth-Node-React password!', html: `Click <a href="${redirectUrl}">here</a> to reset Password. Will expire at ${TOKEN_VAILIDITY_DURATION_IN_MINUTES} minutes.` });
         return res.status(200).send({ success: 'true', message: `Send token to your registered Email. Will expire in ${TOKEN_VAILIDITY_DURATION_IN_MINUTES} minutes.`, data: { validity: tokenValidityLimitEpoch } });
     } catch (e) {
         console.log(`Error during Forgot password mail generation: ${e}`);
