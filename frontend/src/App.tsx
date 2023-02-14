@@ -14,6 +14,7 @@ import OAuthSuccess from './pages/oAuth/OAuthSuccess';
 import OAuthFailure from './pages/oAuth/OAuthFailure';
 
 import './App.css';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="*" component={NotFound} />
         </Switch>
         <ToastContainerWrapper />
+        <Footer />
       </BrowserRouter>
     </div>
   );

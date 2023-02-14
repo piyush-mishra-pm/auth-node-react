@@ -107,10 +107,6 @@ function RegisterForm() {
             {error}
           </div>
         )}
-        <p>
-          As server might be dormant, first API request (google-oAuth or Login/Register button) might take upto 1 minute
-          to serve. Then onwards it should work at faster speeds.
-        </p>
       </div>
     );
   }
