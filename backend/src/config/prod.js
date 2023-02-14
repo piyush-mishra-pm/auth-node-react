@@ -13,4 +13,5 @@ module.exports = {
   FE_ORIGIN: process.env.FE_ORIGIN,
   FE_URI: process.env.FE_URI,
   NODE_ENV: process.env.NODE_ENV,
+  ADMIN_EMAIL_ID: process.env.ADMIN_EMAIL_ID,
 };
