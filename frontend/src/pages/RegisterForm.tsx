@@ -96,11 +96,16 @@ function RegisterForm() {
           </div>
           <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
           <br />
-          <button className="ui button" type="submit">
+          <button className="ui positive button large" type="submit">
             Submit
           </button>
         </form>
-        <Link to="/login">Login instead?</Link>
+        <br />
+        <hr />
+        <br />
+        <Link to="/login">
+          <button className="ui primary button">Login instead?</button>
+        </Link>
         {error && (
           <div className="ui warning message">
             <i className="warning icon"></i>

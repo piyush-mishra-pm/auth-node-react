@@ -56,7 +56,7 @@ function Login() {
         <hr />
         <h2>... Or Login below</h2>
         <form className="ui form" onSubmit={onSubmitHandler}>
-          <div className="field">
+          <div className="field required">
             <label>Email</label>
             <input
               type="email"
@@ -66,7 +66,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="field">
+          <div className="field required">
             <label>Password</label>
             <input
               type="password"
@@ -78,7 +78,7 @@ function Login() {
           </div>
           <ReCAPTCHA ref={recaptchaRef} sitekey={`${process.env.REACT_APP_RECAPTCHA_KEYS}`} />
           <br />
-          <button className="ui button" type="submit">
+          <button className="ui primary button large" type="submit">
             Submit
           </button>
         </form>
@@ -91,12 +91,12 @@ function Login() {
             {error}
           </div>
         )}
-        <Link to="/forgot">
-          <p>Forgot password?</p>
-        </Link>
         <br />
+        <Link to="/forgot">
+          <button className="ui primary button">Forgot password?</button>
+        </Link>
         <Link to="/register">
-          <p>Register instead?</p>
+          <button className="ui primary button">Register instead?</button>
         </Link>
         <br />
       </div>
