@@ -8,7 +8,8 @@ Frontend hosted at: https://auth-node-react.netlify.app
 ### **Frontend Walkthrough:** 
 
 Video Walkthorugh of UX:
-[![Video Walkthrough](https://img.youtube.com/vi/hXLodKNI_GY/maxresdefault.jpg)](https://youtu.be/hXLodKNI_GY)
+
+[![Video Walkthrough](https://img.youtube.com/vi/Cs0CtcuERiE/maxresdefault.jpg)](https://youtu.be/Cs0CtcuERiE)
 
 ### **Architecture and broad flow:**:
 ```mermaid
