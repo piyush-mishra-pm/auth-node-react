@@ -10,6 +10,23 @@ Frontend hosted at: https://auth-node-react.netlify.app
 Video Walkthorugh of UX:
 [![Video Walkthrough](https://img.youtube.com/vi/hXLodKNI_GY/maxresdefault.jpg)](https://youtu.be/hXLodKNI_GY)
 
+### **Architecture and broad flow:**:
+```mermaid
+flowchart LR
+subgraph internal APIs
+u[User] -->|1. Request React SPA| fe{React SPA on Frontend server}
+fe -->|2. Delivering React SPA| u
+u --> |3. all further request from downloaded React SPA| api{Node API backend server}
+api -->|4. node querying db| db[(MongoDB-Atlas)]
+db -->|5. db responding to query| api
+end
+subgraph external APIs
+api -->|4. node oAuth request to google| google[googleoAuth]
+google -->|5. oAuth callback and response| api
+api -->|email sending request| sendgrid[Send-Grid Email Servers]
+end
+```
+
 ---
 ### **Features:** 
 - Typescript for better type safety.
